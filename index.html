@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>東京櫻花季自由行 2027</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&family=Inter:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #ECEEF2;
+      --surface:  #FFFFFF;
+      --border:   #DDE1E9;
+      --text:     #0F1117;
+      --muted:    #6B7280;
+      
+      --theme:    #E06B9A;
+      --theme-bg: #E06B9A1a; /* 10% opacity */
+
+      /* 行程項目類型配色 */
+      --flight:   #3B82F6;
+      --flight-bg:#EFF6FF;
+      --transit:  #10B981;
+      --transit-bg:#ECFDF5;
+      --hotel:    #8B5CF6;
+      --hotel-bg: #F5F3FF;
+      --activity: #EF4444;
+      --activity-bg:#FEF2F2;
+      --food:     #F59E0B;
+      --food-bg:  #FFFBEB;
+      --note:     #6B7280;
+      --note-bg:  #F9FAFB;
+    }
+
+    body {
+      font-family: 'Barlow', 'Inter', 'Noto Sans TC', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 300px;
+      overflow: hidden;
+      background: #0a1a2e;
+    }
+    .hero-img {
+      width: 100%; height: 100%; object-fit: cover; object-position: center;
+      display: block; opacity: 0.7;
+    }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(10,26,46,0.1) 0%, rgba(10,26,46,0.85) 100%);
+    }
+    .hero-content {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      justify-content: flex-end; padding: 0 1.5rem 1.8rem;
+      max-width: 860px; margin: 0 auto;
+    }
+    .hero-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px; font-weight: 700; letter-spacing: 0.2em;
+      text-transform: uppercase; color: rgba(255,255,255,0.7);
+      margin-bottom: 6px;
+    }
+    .hero-title {
+      font-family: 'Barlow Condensed', 'Noto Sans TC', sans-serif;
+      font-size: 3.2rem; font-weight: 800; line-height: 0.95;
+      text-transform: uppercase; color: #fff;
+      letter-spacing: -0.01em;
+    }
+    .hero-title span { color: var(--theme); }
+    .hero-pills {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px;
+    }
+    .hero-pill {
+      background: rgba(255,255,255,0.15); backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff; font-size: 12px; font-weight: 500;
+      padding: 6px 14px; border-radius: 20px; letter-spacing: 0.02em;
+    }
+
+    /* ── TABBAR ── */
+    .tabbar-wrap {
+      background: #0f172a;
+      position: sticky; top: 0; z-index: 100;
+      border-bottom: 2px solid var(--theme);
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    }
+    .tabbar {
+      display: flex; gap: 6px;
+      overflow-x: auto; padding: 12px 16px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none; max-width: 860px; margin: 0 auto;
+    }
+    .tabbar::-webkit-scrollbar { display: none; }
+    .tab {
+      flex-shrink: 0; cursor: pointer;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px; padding: 8px 18px;
+      white-space: nowrap; text-align: center;
+      line-height: 1.3; transition: all 0.2s ease;
+      user-select: none;
+    }
+    .tab .tab-date {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 15px; display: block;
+      color: rgba(255,255,255,0.8); letter-spacing: 0.02em;
+    }
+    .tab .tab-day {
+      font-size: 10px; display: block; margin-top: 2px;
+      color: rgba(255,255,255,0.45); letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .tab:hover { background: rgba(255,255,255,0.12); }
+    .tab.active {
+      background: var(--theme); border-color: var(--theme);
+    }
+    .tab.active .tab-date { color: #fff; }
+    .tab.active .tab-day  { color: rgba(255,255,255,0.8); }
+
+    /* ── PANEL CONTAINER ── */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fadein 0.3s ease; }
+    @keyframes fadein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    .panels-wrap { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 5rem; position: relative; z-index: 10; }
+
+    /* ── TIMELINE & CARDS ── */
+    .timeline {
+      position: relative;
+      padding-left: 20px;
+    }
+    /* 時間線 */
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 7px; top: 12px; bottom: 12px;
+      width: 2px;
+      background: var(--border);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 24px;
+    }
+    .timeline-item:last-child {
+      margin-bottom: 0;
+    }
+
+    /* 時間線小圓點 */
+    .timeline-dot {
+      position: absolute;
+      left: -20px; top: 10px;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: var(--muted);
+      border: 3px solid var(--bg);
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    .timeline-dot span {
+      display: none;
+      font-size: 11px;
+      color: #fff;
+    }
+
+    /* 大螢幕時顯示小圖示在圓點上 */
+    @media (min-width: 480px) {
+      .timeline-dot {
+        width: 28px; height: 28px;
+        left: -26px; top: 8px;
+        border: 4px solid var(--bg);
+      }
+      .timeline-dot span {
+        display: block;
+      }
+    }
+
+    .timeline-content {
+      background: var(--surface);
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+      overflow: hidden;
+      transition: border-left 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    /* 卡片類型左側粗邊框與圓點色設定 */
+    .type-flight { border-left: 5px solid var(--flight); }
+    .type-flight .timeline-dot { background: var(--flight); }
+    .type-transit { border-left: 5px solid var(--transit); }
+    .type-transit .timeline-dot { background: var(--transit); }
+    .type-hotel { border-left: 5px solid var(--hotel); }
+    .type-hotel .timeline-dot { background: var(--hotel); }
+    .type-activity { border-left: 5px solid var(--activity); }
+    .type-activity .timeline-dot { background: var(--activity); }
+    .type-food { border-left: 5px solid var(--food); }
+    .type-food .timeline-dot { background: var(--food); }
+    .type-note { border-left: 5px solid var(--note); }
+    .type-note .timeline-dot { background: var(--note); }
+
+    /* 卡片標頭 */
+    .card-header-main {
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+    .card-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .card-time {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 17px;
+      color: var(--text);
+    }
+    .card-badge {
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 6px;
+      letter-spacing: 0.05em;
+    }
+    
+    .badge-flight   { background: var(--flight-bg); color: var(--flight); }
+    .badge-transit  { background: var(--transit-bg); color: var(--transit); }
+    .badge-hotel    { background: var(--hotel-bg); color: var(--hotel); }
+    .badge-activity { background: var(--activity-bg); color: var(--activity); }
+    .badge-food     { background: var(--food-bg); color: var(--food); }
+    .badge-note     { background: var(--note-bg); color: var(--note); }
+
+    .card-title {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--text);
+    }
+
+    .card-arrow {
+      color: var(--muted);
+      transition: transform 0.2s ease;
+    }
+
+    /* 卡片身體 (手風琴效果) */
+    .card-body {
+      padding: 0 18px 18px;
+      border-top: 1px dashed var(--border);
+      display: block; /* 預設展開 */
+    }
+
+    .card-subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      margin: 8px 0;
+      font-weight: 500;
+    }
+
+    .card-desc {
+      font-size: 14px;
+      color: #374151;
+      line-height: 1.6;
+      margin-top: 8px;
+    }
+
+    /* 地圖按鈕 */
+    .card-map-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 12px;
+      background: var(--bg);
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text);
+      text-decoration: none;
+      transition: all 0.2s ease;
+      margin-top: 8px;
+      border: 1px solid var(--border);
+    }
+    .card-map-btn:hover {
+      background: var(--border);
+    }
+    .card-map-btn span {
+      font-size: 16px;
+    }
+
+    .no-items {
+      text-align: center;
+      padding: 40px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* 摺疊狀態 */
+    .timeline-content.collapsed .card-body {
+      display: none;
+    }
+    .timeline-content.collapsed .card-header-main {
+      padding-bottom: 14px;
+    }
+    .timeline-content.collapsed .card-arrow {
+      transform: rotate(-90deg);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <div class="hero">
+    <img src="https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=1200&q=80" class="hero-img" alt="Cover Image">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">TOKYO SPRING TOUR</div>
+      <h1 class="hero-title">東京櫻花季自由行 <span>2027</span></h1>
+      <div class="hero-pills">
+        
+      <div class="hero-pill">2027/04/02 - 04/06</div>
+    
+      <div class="hero-pill">東京</div>
+    
+      <div class="hero-pill">賞櫻</div>
+    
+      <div class="hero-pill">美食購物</div>
+    
+      </div>
+    </div>
+  </div>
+
+  <!-- STICKY TABBAR -->
+  <div class="tabbar-wrap">
+    <div class="tabbar">
+      
+        <div class="tab active" id="tab-tok-d1" onclick="switchTab('tok-d1')">
+          <span class="tab-date">04/02</span>
+          <span class="tab-day">FRI</span>
+        </div>
+      
+        <div class="tab " id="tab-tok-d2" onclick="switchTab('tok-d2')">
+          <span class="tab-date">04/03</span>
+          <span class="tab-day">SAT</span>
+        </div>
+      
+    </div>
+  </div>
+
+  <!-- PANELS WRAP -->
+  <div class="panels-wrap">
+    
+        <div class="tab-panel active" id="panel-tok-d1">
+          <div class="timeline">
+            
+          <div class="timeline-item type-flight">
+            <div class="timeline-dot">
+              <span class="material-symbols-outlined">local_airport</span>
+            </div>
+            <div class="timeline-content">
+              <div class="card-header-main" onclick="toggleCard(this)">
+                <div class="card-header-left">
+                  <div class="card-time">08:50</div>
+                  <div class="card-badge badge-flight">FLIGHT</div>
+                  <div class="card-title">搭乘星宇航空 JX800</div>
+                </div>
+                <div class="card-header-right">
+                  <span class="material-symbols-outlined card-arrow">expand_more</span>
+                </div>
+              </div>
+              <div class="card-body">
+                
+          <div class="card-subtitle">桃園 (TPE) -> 成田 (NRT)</div>
+        
+                
+          <div class="card-desc">提前 2.5 小時至第一航廈報到。享受星宇航空精品機上餐點。預計 13:15 抵達日本。</div>
+        
+                <div style="margin-top: 12px; display: flex; gap: 8px;">
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        
+          <div class="timeline-item type-transit">
+            <div class="timeline-dot">
+              <span class="material-symbols-outlined">directions_transit</span>
+            </div>
+            <div class="timeline-content">
+              <div class="card-header-main" onclick="toggleCard(this)">
+                <div class="card-header-left">
+                  <div class="card-time">14:30</div>
+                  <div class="card-badge badge-transit">TRANSIT</div>
+                  <div class="card-title">搭乘 Skyliner 前往市區</div>
+                </div>
+                <div class="card-header-right">
+                  <span class="material-symbols-outlined card-arrow">expand_more</span>
+                </div>
+              </div>
+              <div class="card-body">
+                
+          <div class="card-subtitle">成田機場第 2 航廈站 -> 日暮里/上野</div>
+        
+                
+          <div class="card-desc">於京成電鐵櫃檯兌換實體票。車程約 41 分鐘，直達日暮里，位置寬敞舒適。</div>
+        
+                <div style="margin-top: 12px; display: flex; gap: 8px;">
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        
+          <div class="timeline-item type-hotel">
+            <div class="timeline-dot">
+              <span class="material-symbols-outlined">hotel</span>
+            </div>
+            <div class="timeline-content">
+              <div class="card-header-main" onclick="toggleCard(this)">
+                <div class="card-header-left">
+                  <div class="card-time">16:00</div>
+                  <div class="card-badge badge-hotel">HOTEL</div>
+                  <div class="card-title">上野光芒飯店 check-in</div>
+                </div>
+                <div class="card-header-right">
+                  <span class="material-symbols-outlined card-arrow">expand_more</span>
+                </div>
+              </div>
+              <div class="card-body">
+                
+          <div class="card-subtitle">Candeo Hotels Ueno Park</div>
+        
+                
+          <div class="card-desc">日暮里轉乘山手線一站至鶯谷站，步行 3 分鐘即可抵達。頂樓設有精緻男女露天浴場！</div>
+        
+                <div style="margin-top: 12px; display: flex; gap: 8px;">
+                  
+          <a href="https://maps.app.goo.gl/ueno-candeo" target="_blank" class="card-map-btn">
+            <span class="material-symbols-outlined">map</span>地圖
+          </a>
+        
+                </div>
+              </div>
+            </div>
+          </div>
+        
+          </div>
+        </div>
+      
+        <div class="tab-panel " id="panel-tok-d2">
+          <div class="timeline">
+            
+          <div class="timeline-item type-activity">
+            <div class="timeline-dot">
+              <span class="material-symbols-outlined">explore</span>
+            </div>
+            <div class="timeline-content">
+              <div class="card-header-main" onclick="toggleCard(this)">
+                <div class="card-header-left">
+                  <div class="card-time">09:00</div>
+                  <div class="card-badge badge-activity">ACTIVITY</div>
+                  <div class="card-title">新宿御苑 賞櫻散策</div>
+                </div>
+                <div class="card-header-right">
+                  <span class="material-symbols-outlined card-arrow">expand_more</span>
+                </div>
+              </div>
+              <div class="card-body">
+                
+          <div class="card-subtitle">門票 500 日圓 | 開園時間 9:00 - 16:30</div>
+        
+                
+          <div class="card-desc">東京最著名的賞櫻景點之一，園內有超過 1000 棵、數十種不同品種的櫻花。禁止攜帶酒精飲料入園。</div>
+        
+                <div style="margin-top: 12px; display: flex; gap: 8px;">
+                  
+          <a href="https://maps.app.goo.gl/shinjukugyoen" target="_blank" class="card-map-btn">
+            <span class="material-symbols-outlined">map</span>地圖
+          </a>
+        
+                </div>
+              </div>
+            </div>
+          </div>
+        
+          <div class="timeline-item type-food">
+            <div class="timeline-dot">
+              <span class="material-symbols-outlined">restaurant</span>
+            </div>
+            <div class="timeline-content">
+              <div class="card-header-main" onclick="toggleCard(this)">
+                <div class="card-header-left">
+                  <div class="card-time">13:00</div>
+                  <div class="card-badge badge-food">FOOD</div>
+                  <div class="card-title">AFURI 阿夫利拉麵 (原宿店)</div>
+                </div>
+                <div class="card-header-right">
+                  <span class="material-symbols-outlined card-arrow">expand_more</span>
+                </div>
+              </div>
+              <div class="card-body">
+                
+          <div class="card-subtitle">招牌柚子鹽拉麵 | 用機器自助點餐</div>
+        
+                
+          <div class="card-desc">以清爽的柚子香氣搭配炭烤叉燒，是東京的超人氣拉麵！下午非尖峰時段人潮較少，但仍需排隊約 30 分鐘。</div>
+        
+                <div style="margin-top: 12px; display: flex; gap: 8px;">
+                  
+          <a href="https://maps.app.goo.gl/afuri-harajuku" target="_blank" class="card-map-btn">
+            <span class="material-symbols-outlined">map</span>地圖
+          </a>
+        
+                </div>
+              </div>
+            </div>
+          </div>
+        
+          </div>
+        </div>
+      
+  </div>
+
+  <script>
+    // 切換日期 Tab 邏輯
+    function switchTab(dayId) {
+      // 移除所有 active 樣式
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+
+      // 啟用當前選取的 tab & panel
+      document.getElementById('tab-' + dayId).classList.add('active');
+      document.getElementById('panel-' + dayId).classList.add('active');
+      
+      // 自動捲動 Tabbar 使其置中
+      const tabEl = document.getElementById('tab-' + dayId);
+      tabEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+
+    // 摺疊與展開行程卡片
+    function toggleCard(headerEl) {
+      const contentEl = headerEl.closest('.timeline-content');
+      contentEl.classList.toggle('collapsed');
+    }
+  </script>
+</body>
+</html>
